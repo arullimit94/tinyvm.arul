@@ -1,11 +1,3 @@
 # tinyvm
 
-[![make.fun · tiny-stack-vm-01-run-20261122](https://make.fun/badge/tiny-stack-vm-01-run-20261122.svg)](https://make.fun/bounty/tiny-stack-vm-01-run-20261122?utm_source=github&utm_medium=readme&utm_campaign=tiny-stack-vm-01-run-20261122)
-[![rank](https://make.fun/badge/tiny-stack-vm-01-run-20261122/arullimit94/tinyvm.arul/rank.svg)](https://make.fun/bounty/tiny-stack-vm-01-run-20261122/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=tiny-stack-vm-01-run-20261122)
-[![reward](https://make.fun/badge/tiny-stack-vm-01-run-20261122/arullimit94/tinyvm.arul/reward.svg)](https://make.fun/bounty/tiny-stack-vm-01-run-20261122?utm_source=github&utm_medium=readme&utm_campaign=tiny-stack-vm-01-run-20261122)
-
-`tinyvm` is a tiny stack virtual machine: 32-bit wrapping arithmetic, branches, calls, memory, input and output, traps included — exactly the bytes and exit code the reference VM would write.
-
-## Practice score
-
-40 of 40 practice instances passed (score 1,000,000), verified with the kit's `grade-local`.
+A tiny stack virtual machine: 32-bit wrapping arithmetic, branches, calls, memory, input and output, traps included. Practice: 40/40, score 1,000,000.
