@@ -1,42 +1,48 @@
-import fs from'node:fs'
-const{MAKEFUN_INPUT_DIR:I='/input',MAKEFUN_OUTPUT_DIR:O='/output'}=process.env
-for(const d of fs.readdirSync(I)){const P=I+'/'+d,Q=O+'/'+d,[A,E]=run(fs.readFileSync(P+'/program.bin'),fs.readFileSync(P+'/input.bin'));fs.mkdirSync(Q);fs.writeFileSync(Q+'/stdout.bin',A);fs.writeFileSync(Q+'/exit.txt',''+E)}
-function run(p,q){
-  const J=Int32Array,D=new J(256),C=[],M=new J(256),o=Buffer.alloc(1<<16)
-  let s=0,c=0,l=0,ip=0,pc=0,n=0,a,b,U=x=>x>>>0
-  const z=x=>[o.slice(0,l),x]
-  const F=[()=>a+b,()=>a-b,Math.imul,()=>a/b,()=>a%b,()=>U(a)/U(b),()=>U(a)%U(b),()=>-b,()=>a&b,()=>a|b,()=>a^b,()=>~b,()=>a<<b,()=>a>>b,()=>a>>>b,0,()=>a==b,()=>a<b,()=>U(a)<U(b)]
-  for(;;){
-    if(++n>1e6)return z(10)
-    if(pc>>>0>=p.length)return z(9)
-    const op=p[pc],t='0Aq46:;?        999999959995999 999             PTTP0           58              4414'.charCodeAt(op)-48
-    if(op>83|t<0)return z(5)
-    const v=t&15,m=t>>4
-    if(pc+m>=p.length)return z(9)
-    const x=pc+1+m,u=v>>2
-    if(s<u|s-u+(v&3)>256)return z(s<u?2:3)
-    pc=x
-    if(m==2&op<51){
-      a=p.readInt16LE(x-2)
-      if(op<49||(op==49)==!D[--s])pc=x+a
-      continue
-    }
-    switch(op){
-      case 0:return z(0)
-      case 1:D[s++]=p[x-1]<<24>>24;break
-      case 2:D[s++]=p.readInt32LE(x-4);break
-      case 3:s--;break
-      case 4:case 6:D[s]=D[s-1-(op==6)],s++;break
-      case 5:a=D[s-1],D[s-1]=D[s-2],D[s-2]=a;break
-      case 7:[D[s-3],D[s-2],D[s-1]]=[D[s-2],D[s-1],D[s-3]];break
-      case 51:if(c==64)return z(7);C[c++]=x;pc=p[x-2]|p[x-1]<<8;break
-      case 52:if(!c)return z(8);pc=C[--c];break
-      case 64:case 65:a=D[s-1];if(U(a)>255)return z(6);if(op<65)D[s-1]=M[a];else s-=2,M[a]=D[s];break
-      case 80:a=Buffer.from(''+D[s-1]);if(l+a.length>65536)return z(11);s--;l+=a.copy(o,l);break
-      case 81:if(l>>16)return z(11);o[l++]=D[--s]&255;break
-      case 82:D[s++]=q[ip++]??-1;break
-      case 83:return z(D[--s]&255)
-      default:a=D[s-2];b=D[s-1];if(op>18&op<23&!b)return z(4);s-=u;D[s++]=F[op-16](a,b)
-    }
-  }
+import{readdirSync as R,readFileSync as F,mkdirSync as K,writeFileSync as W}from"fs"
+let T="01146abfeeeeeeee999999959995999e999eeeeeeeeeeeee04400eeeeeeeeeee58eeeeeeeeeeeeee4414",E=0
+let B=[(x,y)=>x+y|0,(x,y)=>x-y|0,Math.imul,(x,y)=>x/y|0,(x,y)=>x%y|0,(x,y)=>(x>>>0)/(y>>>0)|0,(x,y)=>(x>>>0)%(y>>>0)|0,0,(x,y)=>x&y,(x,y)=>x|y,(x,y)=>x^y,0,(x,y)=>x<<(y&31),(x,y)=>x>>(y&31),(x,y)=>(x>>>(y&31))|0,0,(x,y)=>+(x==y),(x,y)=>+(x<y),(x,y)=>+(x>>>0<y>>>0)]
+let V=(P,I)=>{
+let O="",S=[],C=[],M=[],p=0,j=0,n=0,J=()=>P.readInt16LE(p+1)
+try{for(;;){
+if(n>=1e6)throw 10;
+if(p>>>0>=P.length)throw 9;
+let o=P[p],v=+("0x"+(T[o]||"e"));
+if(v==14)throw 5;
+let L=o==1?1:o==2?4:o>47&&o<52?2:0;
+if(p+1+L>P.length)throw 9;
+n++;
+let U=v>>2,H=v&3;
+if(S.length<U)throw 2;
+if(S.length-U+H>256)throw 3;
+let a=S.at(-1),b=S.at(-2);
+if(o==0)throw 0;
+else if(o<3)S.push(o==1?P[p+1]<<24>>24:P.readInt32LE(p+1));
+else if(o==3)S.pop();
+else if(o==4)S.push(a);
+else if(o==5)S.push(S.splice(-2,1)[0]);
+else if(o==6)S.push(b);
+else if(o==7)S.push(S.splice(-3,1)[0]);
+else if(o==23)S[S.length-1]=-a|0;
+else if(o==27)S[S.length-1]=~a;
+else if(o>15&&o<35){if(o>18&&o<23&&!a)throw 4;S.length-=2;S.push(B[o-16](b,a))}
+else if(o==48){p+=3+J();continue}
+else if(o==49){S.pop();if(!a){p+=3+J();continue}}
+else if(o==50){S.pop();if(a){p+=3+J();continue}}
+else if(o==51){if(C.length>63)throw 7;C.push(p+3);p=P[p+1]|P[p+2]<<8;continue}
+else if(o==52){if(!C.length)throw 8;p=C.pop();continue}
+else if(o==64){if(a>>>0>255)throw 6;S[S.length-1]=M[a]||0}
+else if(o==65){if(a>>>0>255)throw 6;M[a]=b;S.length-=2}
+else if(o==80){if(O.length+(""+a).length>65536)throw 11;O+=a;S.pop()}
+else if(o==81){if(O.length>65535)throw 11;O+=String.fromCharCode(a&255);S.pop()}
+else if(o==82)S.push(j<I.length?I[j++]:-1);
+else if(o==83)throw a&255;
+p+=1+L;
+}}catch(x){E=x}
+return O
+}
+for(let d of R("/input")){
+let o=V(F("/input/"+d+"/program.bin"),F("/input/"+d+"/input.bin")),t="/output/"+d+"/";
+K(t,{recursive:true});
+W(t+"stdout.bin",Buffer.from(o,"latin1"));
+W(t+"exit.txt",E+"");
 }
